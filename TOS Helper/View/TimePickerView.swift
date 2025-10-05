@@ -10,10 +10,12 @@ import SwiftUI
 struct TimePickerView: View {
     @Binding var minute: Int
     @Binding var second: Int
+    @Binding var isLocked: Bool
     
-    init(_ minute: Binding<Int>,_ second: Binding<Int> ) {
+    init(_ minute: Binding<Int>,_ second: Binding<Int> ,_ isLocked: Binding<Bool>) {
         self._minute = minute
         self._second = second
+        self._isLocked = isLocked
     }
     
     var body: some View {
@@ -24,6 +26,7 @@ struct TimePickerView: View {
                 }
             }
             .pickerStyle(.wheel)
+            .disabled(isLocked)
             Text(":")
             Picker("",selection: $second){
                 ForEach(0..<60,id: \.self){i in
@@ -31,12 +34,12 @@ struct TimePickerView: View {
                 }
             }
             .pickerStyle(.wheel)
+            .disabled(isLocked)
         }
+        .animation(.default,value: "\(minute)" + "\(second)")
     }
 }
 
 #Preview {
-    @State var minute: Int = 0
-    @State var second: Int = 0
-    TimePickerView($minute, $second)
+    TimePickerView(.constant(0), .constant(0), .constant(false))
 }
