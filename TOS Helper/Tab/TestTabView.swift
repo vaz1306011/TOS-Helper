@@ -8,8 +8,8 @@
 import SwiftUI
 import WebKit
 
-struct TestTab: View {
     let page: WebPage = WebPage()
+struct TestTabView: View {
     var body: some View {
         NavigationStack {
             WebView(page)
@@ -22,5 +22,5 @@ struct TestTab: View {
 }
 
 #Preview {
-    TestTab()
+    TestTabView()
 }

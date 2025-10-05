@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct TimerTab: View {
     @State var currentStamina:Int? = 0
     @State var maxStamina:Int? = 0
     @State var targetStamina:Int? = 0
     @State var nextStaminaMinute:Int = 0
     @State var nextStaminaSecond:Int = 0
+struct TimerTabView: View {
     
     var body: some View {
         NavigationStack{
@@ -48,5 +48,5 @@ struct TimerTab: View {
 }
 
 #Preview {
-    TimerTab()
+    TimerTabView()
 }

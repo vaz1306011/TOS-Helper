@@ -11,10 +11,10 @@ struct ContentView: View {
     var body: some View {
         TabView{
             Tab("計時器", systemImage: "timer"){
-                TimerTab()
+                TimerTabView()
             }
             Tab("固版轉法", systemImage: "wand.and.outline"){
-                TestTab()
+                TestTabView()
             }
         }
         .tabBarMinimizeBehavior(.onScrollDown)
