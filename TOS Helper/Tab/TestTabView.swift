@@ -8,19 +8,25 @@
 import SwiftUI
 import WebKit
 
-    let page: WebPage = WebPage()
 struct TestTabView: View {
-    var body: some View {
-        NavigationStack {
-            WebView(page)
-                .onAppear {
-                    page.load(URLRequest(url:URL(string:"https://hiteku.github.io/tosPath/")!))
-                }
-                .navigationTitle(Text("TOS Path"))
+  // MARK: - Properties
+  private let page: WebPage = .init()
+
+  // MARK: - Body
+  var body: some View {
+    NavigationStack {
+      WebView(page)
+        .onAppear {
+          page.load(
+            URLRequest(url: URL(string: "https://hiteku.github.io/tosPath/")!)
+          )
         }
+        .navigationTitle(Text("TOS Path"))
     }
+  }
 }
 
+// MARK: - Preview
 #Preview {
-    TestTabView()
+  TestTabView()
 }

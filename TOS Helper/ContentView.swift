@@ -8,19 +8,21 @@
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        TabView{
-            Tab("計時器", systemImage: "timer"){
-                TimerTabView()
-            }
-            Tab("固版轉法", systemImage: "wand.and.outline"){
-                TestTabView()
-            }
-        }
-        .tabBarMinimizeBehavior(.onScrollDown)
+  // MARK: - Body
+  var body: some View {
+    TabView {
+      Tab("計時器", systemImage: "timer") {
+        TimerTabView()
+      }
+      Tab("固版轉法", systemImage: "wand.and.outline") {
+        TestTabView()
+      }
     }
+    .tabBarMinimizeBehavior(.onScrollDown)
+  }
 }
 
+// MARK: - Preview
 #Preview {
-    ContentView()
+  ContentView()
 }

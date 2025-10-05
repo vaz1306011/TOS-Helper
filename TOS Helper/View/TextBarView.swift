@@ -8,38 +8,52 @@
 import SwiftUI
 
 struct TextBarView: View {
-    let text: String
-    @Binding var num: Int?
-    
-    init(_ text: String,_ num: Binding<Int?>) {
-        self.text = text
-        self._num = num
+  // MARK: - Properties
+  @Binding var num: Int?
+  private let text: String
+
+  init(_ text: String, _ num: Binding<Int?>) {
+    self.text = text
+    self._num = num
+  }
+
+  // MARK: - Body
+  var body: some View {
+    VStack(alignment: .center, spacing: 5) {
+      Text(text)
+        .font(.title3)
+      textField
     }
-    
-    var body: some View {
-        VStack(alignment: .center, spacing: 5) {
-            Text(text)
-                .font(.headline)
-            
-            TextField("", value: $num, format: .number)
-                .keyboardType(.numberPad)
-                .multilineTextAlignment(.center)
-                .padding(10)
-                .border(Color.gray, width: 1)
-                .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidBeginEditingNotification)){ obj in
-                    if let textField = obj.object as? UITextField {
-                        textField.selectedTextRange = textField.textRange(
-                            from: textField.beginningOfDocument,
-                            to: textField.endOfDocument
-                        )
-                    }
-                }
-        }
-        .padding()
-    }
+    .padding()
+  }
 }
 
+// MARK: - Subviews
+private extension TextBarView {
+  @ViewBuilder
+  var textField: some View {
+    TextField("", value: $num, format: .number)
+      .font(.title2)
+      .keyboardType(.numberPad)
+      .multilineTextAlignment(.center)
+      .padding(10)
+      .border(Color.gray, width: 1)
+      .onReceive(
+        NotificationCenter.default.publisher(
+          for: UITextField.textDidBeginEditingNotification
+        )
+      ) { obj in
+        if let textField = obj.object as? UITextField {
+          textField.selectedTextRange = textField.textRange(
+            from: textField.beginningOfDocument,
+            to: textField.endOfDocument
+          )
+        }
+      }
+  }
+}
+
+// MARK: - Preview
 #Preview {
-    @State var n:Int?=100
-    TextBarView("當前體力",$n)
+  TextBarView("當前體力", .constant(100))
 }
