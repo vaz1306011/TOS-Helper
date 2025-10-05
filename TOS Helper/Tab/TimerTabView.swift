@@ -25,20 +25,17 @@ struct TimerTabView: View {
 
   // MARK: - Body
   var body: some View {
-    NavigationStack {
-      GeometryReader { geometry in
-        VStack {
-          staminaInput
-            .frame(width: geometry.size.width * 0.8)
+    GeometryReader { geometry in
+      VStack {
+        staminaInput
+          .frame(width: geometry.size.width * 0.8)
 
-          TimePickerView($nextStaminaMinute, $nextStaminaSecond, $isCounting)
-            .frame(width: geometry.size.width * 0.5)
+        TimePickerView($nextStaminaMinute, $nextStaminaSecond, $isCounting)
+          .frame(width: geometry.size.width * 0.5)
 
-          counterButton
-        }
-        .frame(maxWidth: .infinity, alignment: .center)
-        .navigationTitle("Timer")
+        counterButton
       }
+      .frame(maxWidth: .infinity, alignment: .center)
     }
   }
 }
