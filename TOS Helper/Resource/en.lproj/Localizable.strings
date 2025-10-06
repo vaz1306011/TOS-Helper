@@ -1,0 +1,37 @@
+/* 
+  Localizable.strings
+  TOS Helper
+
+  Created by sora on 2025/10/6.
+  
+*/
+
+// Tab Title
+"add_timer" = "Add Timer";
+"edit_timer" = "Edit Timer";
+"confirm_delete" = "Confirm Delete";
+
+// Game Info
+"game_name" = "Game Name";
+"enter_game_name" = "Enter Game Name";
+"recovery_interval" = "Recovery Interval(minute)";
+"enter_recovery_interval" = "Enter Recovery Interval";
+"confirm_delete_message" = "Are you sure you want to delete “%@”?";
+
+// Stamina
+"current_stamina" = "Current Stamina";
+"max_stamina" = "Max Stamina";
+"target_stamina" = "Target Stamina";
+
+// Timer Control
+"stop" = "Stop";
+"start" = "Start";
+
+// Tab Actions
+"add" = "Add";
+"edit" = "Edit";
+"delete" = "Delete";
+
+// Toolbar Actions
+"save" = "Save";
+"cancel" = "Cancel";

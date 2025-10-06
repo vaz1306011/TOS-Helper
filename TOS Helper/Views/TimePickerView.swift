@@ -9,11 +9,19 @@ import SwiftUI
 
 struct TimePickerView: View {
   // MARK: - Properties
+  @Binding var maxMinute: Int
   @Binding var minute: Int
   @Binding var second: Int
   @Binding var isLocked: Bool
 
-  init(_ minute: Binding<Int>, _ second: Binding<Int>, _ isLocked: Binding<Bool>) {
+  // MARK: - Init
+  init(
+    maxMinute: Binding<Int>,
+    minute: Binding<Int>,
+    second: Binding<Int>,
+    isLocked: Binding<Bool>
+  ) {
+    self._maxMinute = maxMinute
     self._minute = minute
     self._second = second
     self._isLocked = isLocked
@@ -35,7 +43,7 @@ private extension TimePickerView {
   @ViewBuilder
   var minutePicker: some View {
     Picker("", selection: $minute) {
-      ForEach(0..<8, id: \.self) { i in
+      ForEach(0..<max(1, maxMinute), id: \.self) { i in
         Text("\(i)")
       }
     }
@@ -59,5 +67,10 @@ private extension TimePickerView {
 
 // MARK: - Preview
 #Preview {
-  TimePickerView(.constant(0), .constant(0), .constant(false))
+  TimePickerView(
+    maxMinute: .constant(8),
+    minute: .constant(0),
+    second: .constant(0),
+    isLocked: .constant(false)
+  )
 }
