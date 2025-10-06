@@ -16,6 +16,7 @@
 "enter_game_name" = "Enter Game Name";
 "recovery_interval" = "Recovery Interval(minute)";
 "enter_recovery_interval" = "Enter Recovery Interval";
+"confirm_delete_message" = "Are you sure you want to delete “%@”?";
 
 // Stamina
 "current_stamina" = "Current Stamina";
