@@ -10,12 +10,12 @@ import SwiftUI
 
 struct TimerTabView: View {
   // MARK: - Properties
-  @State private var currentStamina: Int? = 0
-  @State private var maxStamina: Int? = 0
-  @State private var targetStamina: Int? = 0
+  @State private var currentStamina: Int = 0
+  @State private var maxStamina: Int = 0
+  @State private var targetStamina: Int = 0
 
-  private var maxMinutes: Int = 7
-  @State private var nextStaminaMinute: Int = 0
+  var recoveryInterval: Int = 8
+  @State private var nextRecoveryMinute: Int = 0
   @State private var nextStaminaSecond: Int = 0
 
   @State private var isCounting: Bool = false
@@ -30,8 +30,13 @@ struct TimerTabView: View {
         staminaInput
           .frame(width: geometry.size.width * 0.8)
 
-        TimePickerView($nextStaminaMinute, $nextStaminaSecond, $isCounting)
-          .frame(width: geometry.size.width * 0.5)
+        TimePickerView(
+          maxMinute: recoveryInterval,
+          minute: $nextRecoveryMinute,
+          second: $nextStaminaSecond,
+          isLocked: $isCounting
+        )
+        .frame(width: geometry.size.width * 0.5)
 
         counterButton
       }
@@ -85,11 +90,11 @@ private extension TimerTabView {
   func tick() {
     nextStaminaSecond -= 1
     guard nextStaminaSecond < 0 else { return }
-    nextStaminaMinute -= 1
+    nextRecoveryMinute -= 1
     nextStaminaSecond = 59
-    guard nextStaminaMinute < 0 else { return }
-    nextStaminaMinute = maxMinutes
-    currentStamina? += 1
+    guard nextRecoveryMinute < 0 else { return }
+    nextRecoveryMinute = recoveryInterval
+    currentStamina += 1
   }
 }
 

@@ -14,7 +14,7 @@ struct ContentView: View {
   ]
   @State private var selection: UUID? = nil
   @State private var showEditSheet: Bool = false
-  @State private var tabToEdit: GameTab?
+  @State private var currentTab: GameTab?
   var currentTabTitle: String {
     if let selectedId = selection,
        let tab = tabs.first(where: { $0.id == selectedId })
@@ -36,14 +36,6 @@ struct ContentView: View {
             }
             .tag(tab.id)
         }
-        .sheet(item: $tabToEdit) { tab in
-          EditTabView(tab: tab) { updatedTab in
-            if let index = tabs.firstIndex(where: { $0.id == tab.id }) {
-              tabs[index] = updatedTab
-            }
-            tabToEdit = nil
-          }
-        }
       }
       .onAppear {
         if selection == nil {
@@ -63,6 +55,21 @@ struct ContentView: View {
           }
         }
       }
+      .sheet(item: $currentTab) { tab in
+        EditTabView(
+          tab:tab,
+          onSave: { tab in
+            let tabIndex = tabs.firstIndex { tab in
+              tab.id == self.currentTab!.id
+            }
+            tabs[tabIndex!] = tab
+            currentTab = nil
+          },
+          onCancel: {
+            currentTab = nil
+          }
+        )
+      }
     }
   }
 }
@@ -81,7 +88,7 @@ private extension ContentView {
   private func editCurrentTab() {
     guard let currentId = selection,
           let tab = tabs.first(where: { $0.id == currentId }) else { return }
-    tabToEdit = tab
+    currentTab = tab
   }
 
   private func deleteCurrentTab() {
@@ -92,28 +99,6 @@ private extension ContentView {
       addTab()
     }
     selection = tabs.first?.id
-  }
-}
-
-// MARK: - Sheet View
-struct EditTabView: View {
-  @State var tab: GameTab
-  var onSave: (GameTab) -> Void
-
-  var body: some View {
-    NavigationStack {
-      Form {
-        TextField("Tab 名稱", text: $tab.name)
-      }
-      .navigationTitle("編輯 Tab")
-      .toolbar {
-        ToolbarItem(placement: .confirmationAction) {
-          Button("完成") {
-            onSave(tab)
-          }
-        }
-      }
-    }
   }
 }
 
