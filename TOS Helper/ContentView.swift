@@ -10,18 +10,18 @@ import SwiftUI
 struct ContentView: View {
   // MARK: - Properties
   @State private var tabs: [GameTab] = [
-    GameTab(name: "計時器", view: TimerTabView()),
+    GameTab(name: "New Game", view: TimerTabView()),
   ]
+  @State private var showAddSheet: Bool = false
   @State private var selection: UUID? = nil
-  @State private var showEditSheet: Bool = false
   @State private var currentTab: GameTab?
   var currentTabTitle: String {
-    if let selectedId = selection,
-       let tab = tabs.first(where: { $0.id == selectedId })
+    if let selection,
+       let tab = tabs.first(where: { $0.id == selection })
     {
       return tab.name
     }
-    return "Tabs"
+    return "nil Title"
   }
 
   // MARK: - Body
@@ -46,9 +46,9 @@ struct ContentView: View {
       .toolbar {
         ToolbarItem(placement: .navigationBarTrailing) {
           Menu {
-            Button("新增") { addTab() }
-            Button("編輯") { editCurrentTab() }
-            Button("刪除") { deleteCurrentTab() }
+            Button("add") { addTab() }
+            Button("edit") { editCurrentTab() }
+            Button("delete") { deleteCurrentTab() }
           } label: {
             Image(systemName: "ellipsis.circle.fill")
               .font(.title)
@@ -57,7 +57,7 @@ struct ContentView: View {
       }
       .sheet(item: $currentTab) { tab in
         EditTabView(
-          tab:tab,
+          tab: tab,
           onSave: { tab in
             let tabIndex = tabs.firstIndex { tab in
               tab.id == self.currentTab!.id
@@ -78,7 +78,7 @@ struct ContentView: View {
 private extension ContentView {
   func addTab() {
     let newTab = GameTab(
-      name: "遊戲 \(tabs.count + 1)",
+      name: "Game \(tabs.count + 1)",
       view: TimerTabView()
     )
     tabs.append(newTab)

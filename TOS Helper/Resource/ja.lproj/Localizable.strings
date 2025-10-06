@@ -1,0 +1,19 @@
+/* 
+  Localizable.strings
+  TOS Helper
+ 
+  Created by sora on 2025/10/6.
+ 
+ */
+"game_name" = "ゲーム名";
+"edit_timer" = "タイマーを編集";
+"save" = "保存";
+"cancel" = "キャンセル";
+"current_stamina" = "現在のスタミナ";
+"max_stamina" = "最大スタミナ";
+"target_stamina" = "目標スタミナ";
+"stop" = "停止";
+"start" = "開始";
+"add" = "追加";
+"edit" = "編集";
+"delete" = "削除";

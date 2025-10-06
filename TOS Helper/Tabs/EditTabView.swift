@@ -15,17 +15,17 @@ struct EditTabView: View {
   var body: some View {
     NavigationStack {
       Form {
-        TextField("Tab 名稱", text: $tab.name)
+        TextField("game_name", text: $tab.name)
       }
-      .navigationTitle("編輯 Tab")
+      .navigationTitle("edit_timer")
       .toolbar {
         ToolbarItem(placement: .confirmationAction) {
-          Button("完成") {
+          Button("save") {
             onSave(tab)
           }
         }
         ToolbarItem(placement: .cancellationAction) {
-          Button("取消") {
+          Button("cancel") {
             onCancel()
           }
         }
@@ -37,7 +37,7 @@ struct EditTabView: View {
 #Preview {
   NavigationStack {
     EditTabView(
-      tab: GameTab(name: "計時器", view: TimerTabView()),
+      tab: GameTab(name: "Test name", view: TimerTabView()),
       onSave: { _ in },
       onCancel: {}
     )

@@ -10,9 +10,9 @@ import SwiftUI
 struct TextBarView: View {
   // MARK: - Properties
   @Binding var num: Int
-  private let text: String
+  private let text: LocalizedStringKey
 
-  init(_ text: String, _ num: Binding<Int>) {
+  init(_ text: LocalizedStringKey, _ num: Binding<Int>) {
     self.text = text
     self._num = num
   }

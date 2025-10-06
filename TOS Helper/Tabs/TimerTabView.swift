@@ -50,9 +50,9 @@ private extension TimerTabView {
   @ViewBuilder
   var staminaInput: some View {
     HStack {
-      TextBarView("當前體力", $currentStamina)
-      TextBarView("最大體力", $maxStamina)
-      TextBarView("目標體力", $targetStamina)
+      TextBarView("current_stamina", $currentStamina)
+      TextBarView("max_stamina", $maxStamina)
+      TextBarView("target_stamina", $targetStamina)
     }
   }
 
@@ -62,7 +62,7 @@ private extension TimerTabView {
       isCounting.toggle()
       handleTimer()
     }) {
-      Text(isCounting ? "停止" : "開始")
+      Text(isCounting ? "stop" : "start")
         .padding(.horizontal, 30)
         .padding(.vertical)
         .background(Color.gray.opacity(0.2))

@@ -1,0 +1,19 @@
+/* 
+  Localizable.strings
+  TOS Helper
+
+  Created by sora on 2025/10/6.
+  
+*/
+"game_name" = "Game Name";
+"edit_timer" = "Edit Timer";
+"save" = "Save";
+"cancel" = "Cancel";
+"current_stamina" = "Current Stamina";
+"max_stamina" = "Max Stamina";
+"target_stamina" = "Target Stamina";
+"stop" = "Stop";
+"start" = "Start";
+"add" = "Add";
+"edit" = "Edit";
+"delete" = "Delete";
