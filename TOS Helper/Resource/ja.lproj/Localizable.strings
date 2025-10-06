@@ -5,15 +5,32 @@
   Created by sora on 2025/10/6.
  
  */
-"game_name" = "ゲーム名";
+
+// Tab Title
+"add_timer" = "タイマーを追加";
 "edit_timer" = "タイマーを編集";
-"save" = "保存";
-"cancel" = "キャンセル";
+"confirm_delete" = "削除を確認";
+
+// Game Info
+"game_name" = "ゲーム名";
+"enter_game_name" = "ゲーム名を入力";
+"recovery_interval" = "回復時間(分)";
+"enter_recovery_interval" = "回復時間を入力";
+
+// Stamina
 "current_stamina" = "現在のスタミナ";
 "max_stamina" = "最大スタミナ";
 "target_stamina" = "目標スタミナ";
+
+// Timer Control
 "stop" = "停止";
 "start" = "開始";
+
+// Tab Actions
 "add" = "追加";
 "edit" = "編集";
 "delete" = "削除";
+
+// Toolbar Actions
+"save" = "保存";
+"cancel" = "キャンセル";

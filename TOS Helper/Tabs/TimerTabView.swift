@@ -10,11 +10,8 @@ import SwiftUI
 
 struct TimerTabView: View {
   // MARK: - Properties
-  @State private var currentStamina: Int = 0
-  @State private var maxStamina: Int = 0
-  @State private var targetStamina: Int = 0
+  @Binding var gameData: GameData
 
-  var recoveryInterval: Int = 8
   @State private var nextRecoveryMinute: Int = 0
   @State private var nextStaminaSecond: Int = 0
 
@@ -31,7 +28,7 @@ struct TimerTabView: View {
           .frame(width: geometry.size.width * 0.8)
 
         TimePickerView(
-          maxMinute: recoveryInterval,
+          maxMinute: $gameData.recoveryInterval,
           minute: $nextRecoveryMinute,
           second: $nextStaminaSecond,
           isLocked: $isCounting
@@ -50,9 +47,9 @@ private extension TimerTabView {
   @ViewBuilder
   var staminaInput: some View {
     HStack {
-      TextBarView("current_stamina", $currentStamina)
-      TextBarView("max_stamina", $maxStamina)
-      TextBarView("target_stamina", $targetStamina)
+      TextBarView("current_stamina", $gameData.currentStamina)
+      TextBarView("max_stamina", $gameData.maxStamina)
+      TextBarView("target_stamina", $gameData.targetStamina)
     }
   }
 
@@ -93,12 +90,28 @@ private extension TimerTabView {
     nextRecoveryMinute -= 1
     nextStaminaSecond = 59
     guard nextRecoveryMinute < 0 else { return }
-    nextRecoveryMinute = recoveryInterval
-    currentStamina += 1
+    nextRecoveryMinute = gameData.recoveryInterval - 1
+    gameData.currentStamina += 1
+  }
+}
+
+struct StatefulPreviewWrapper<Value, Content: View>: View {
+  @State var value: Value
+  var content: (Binding<Value>) -> Content
+
+  init(_ value: Value, content: @escaping (Binding<Value>) -> Content) {
+    _value = State(initialValue: value)
+    self.content = content
+  }
+
+  var body: some View {
+    content($value)
   }
 }
 
 // MARK: - Preview
 #Preview {
-  TimerTabView()
+  TimerTabView(
+    gameData: .constant(GameData(name: "Game name", recoveryInterval: 8))
+  )
 }

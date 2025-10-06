@@ -5,15 +5,32 @@
   Created by sora on 2025/10/6.
   
 */
-"game_name" = "遊戲名稱";
+
+// Tab Title
+"add_timer" = "新增計時器";
 "edit_timer" = "編輯計時器";
-"save" = "儲存";
-"cancel" = "取消";
+"confirm_delete" = "確認刪除";
+
+// Game Info
+"game_name" = "遊戲名稱";
+"enter_game_name" = "輸入遊戲名稱";
+"recovery_interval" = "回復時間(分)";
+"enter_recovery_interval" = "輸入回復時間";
+
+// Stamina
 "current_stamina" = "當前體力";
 "max_stamina" = "最大體力";
 "target_stamina" = "目標體力";
+
+// Timer Control
 "stop" = "停止";
 "start" = "開始";
+
+// Tab Actions
 "add" = "新增";
 "edit" = "編輯";
 "delete" = "刪除";
+
+// Toolbar Actions
+"save" = "儲存";
+"cancel" = "取消";

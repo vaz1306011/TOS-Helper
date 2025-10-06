@@ -7,8 +7,11 @@
 
 import SwiftUI
 
-struct GameTab: Identifiable {
+struct GameData: Identifiable {
   let id = UUID()
   var name: String
-  var view: TimerTabView
+  var recoveryInterval: Int
+  var currentStamina: Int = 0
+  var maxStamina: Int = 0
+  var targetStamina: Int = 0
 }

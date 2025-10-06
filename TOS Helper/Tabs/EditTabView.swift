@@ -8,20 +8,46 @@
 import SwiftUI
 
 struct EditTabView: View {
-  @State var tab: GameTab
-  var onSave: (GameTab) -> Void
+  // MARK: - Properties
+  @Binding var gameData: GameData
+  var onSave: () -> Void
   var onCancel: () -> Void
-  
+
+  @State private var tempGameData: GameData
+
+  // MARK: - Init
+  init(
+    gameData: Binding<GameData>,
+    onSave: @escaping () -> Void,
+    onCancel: @escaping () -> Void
+  ) {
+    self._gameData = gameData
+    self.onSave = onSave
+    self.onCancel = onCancel
+    self.tempGameData = gameData.wrappedValue
+  }
+
+  // MARK: - Body
   var body: some View {
     NavigationStack {
       Form {
-        TextField("game_name", text: $tab.name)
+        Section(header: Text("game_name")) {
+          TextField("game_name", text: $tempGameData.name)
+        }
+        Section(header: Text("recovery_interval")) {
+          TextField(
+            "game_name",
+            value: $tempGameData.recoveryInterval,
+            format: .number
+          )
+        }
       }
       .navigationTitle("edit_timer")
       .toolbar {
         ToolbarItem(placement: .confirmationAction) {
           Button("save") {
-            onSave(tab)
+            gameData = tempGameData
+            onSave()
           }
         }
         ToolbarItem(placement: .cancellationAction) {
@@ -34,12 +60,11 @@ struct EditTabView: View {
   }
 }
 
+// MARK: - Preview
 #Preview {
-  NavigationStack {
-    EditTabView(
-      tab: GameTab(name: "Test name", view: TimerTabView()),
-      onSave: { _ in },
-      onCancel: {}
-    )
-  }
+  EditTabView(
+    gameData: .constant(GameData(name: "", recoveryInterval: 8)),
+    onSave: {},
+    onCancel: {}
+  )
 }

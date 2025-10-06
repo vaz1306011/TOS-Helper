@@ -9,13 +9,19 @@ import SwiftUI
 
 struct TimePickerView: View {
   // MARK: - Properties
-  let maxMinute: Int
+  @Binding var maxMinute: Int
   @Binding var minute: Int
   @Binding var second: Int
   @Binding var isLocked: Bool
 
-  init(maxMinute: Int, minute: Binding<Int>, second: Binding<Int>, isLocked: Binding<Bool>) {
-    self.maxMinute = maxMinute
+  // MARK: - Init
+  init(
+    maxMinute: Binding<Int>,
+    minute: Binding<Int>,
+    second: Binding<Int>,
+    isLocked: Binding<Bool>
+  ) {
+    self._maxMinute = maxMinute
     self._minute = minute
     self._second = second
     self._isLocked = isLocked
@@ -62,7 +68,7 @@ private extension TimePickerView {
 // MARK: - Preview
 #Preview {
   TimePickerView(
-    maxMinute: 8,
+    maxMinute: .constant(8),
     minute: .constant(0),
     second: .constant(0),
     isLocked: .constant(false)

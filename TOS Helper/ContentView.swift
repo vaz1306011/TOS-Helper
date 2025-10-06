@@ -9,13 +9,14 @@ import SwiftUI
 
 struct ContentView: View {
   // MARK: - Properties
-  @State private var tabs: [GameTab] = [
-    GameTab(name: "New Game", view: TimerTabView()),
-  ]
-  @State private var showAddSheet: Bool = false
+  @State private var tabs: [GameData] = [.init(name: "New Game", recoveryInterval: 8)]
+
+  @State private var showAddingTab: Bool = false
+  @State private var showDeleteAlert : Bool = false
+  
   @State private var selection: UUID? = nil
-  @State private var currentTab: GameTab?
-  var currentTabTitle: String {
+  @State private var tempTab: GameData?
+  private var currentTabTitle: String {
     if let selection,
        let tab = tabs.first(where: { $0.id == selection })
     {
@@ -28,11 +29,11 @@ struct ContentView: View {
   var body: some View {
     NavigationStack {
       TabView(selection: $selection) {
-        ForEach(tabs) { tab in
-          tab.view
+        ForEach($tabs) { tab in
+          TimerTabView(gameData: tab)
             .tabItem {
               Image(systemName: "square.fill")
-              Text(tab.name)
+              Text(tab.name.wrappedValue)
             }
             .tag(tab.id)
         }
@@ -55,20 +56,25 @@ struct ContentView: View {
           }
         }
       }
-      .sheet(item: $currentTab) { tab in
-        EditTabView(
-          tab: tab,
+      .sheet(isPresented: $showAddingTab, content: {
+        AddTabView(
           onSave: { tab in
-            let tabIndex = tabs.firstIndex { tab in
-              tab.id == self.currentTab!.id
-            }
-            tabs[tabIndex!] = tab
-            currentTab = nil
-          },
-          onCancel: {
-            currentTab = nil
+            tabs.append(tab)
+            showAddingTab = false
+            selection = tab.id
+          }, onCancel: {
+            showAddingTab = false
           }
         )
+      })
+      .sheet(item: $tempTab) { tab in
+        if let index = tabs.firstIndex(where: { $0.id == tab.id }) {
+          EditTabView(
+            gameData: $tabs[index],
+            onSave: { tempTab = nil },
+            onCancel: { tempTab = nil }
+          )
+        }
       }
     }
   }
@@ -77,18 +83,13 @@ struct ContentView: View {
 // MARK: - Menu Logic
 private extension ContentView {
   func addTab() {
-    let newTab = GameTab(
-      name: "Game \(tabs.count + 1)",
-      view: TimerTabView()
-    )
-    tabs.append(newTab)
-    selection = newTab.id
+    showAddingTab = true
   }
 
   private func editCurrentTab() {
     guard let currentId = selection,
           let tab = tabs.first(where: { $0.id == currentId }) else { return }
-    currentTab = tab
+    tempTab = tab
   }
 
   private func deleteCurrentTab() {
