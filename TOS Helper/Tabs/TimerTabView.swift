@@ -17,6 +17,8 @@ struct TimerTabView: View {
   private let timer = Timer.publish(every: 1, on: .main, in: .common)
     .autoconnect()
 
+  @FocusState private var isFocused: Bool
+
   // MARK: - Init
   init(_ gameData: Binding<GameData>) {
     self._gameData = gameData
@@ -50,8 +52,19 @@ private extension TimerTabView {
   var staminaInput: some View {
     HStack {
       TextBarView("current_stamina", $gameData.currentStamina)
+        .focused($isFocused)
       TextBarView("max_stamina", $gameData.maxStamina)
+        .focused($isFocused)
       TextBarView("target_stamina", $gameData.targetStamina)
+        .focused($isFocused)
+    }
+    .toolbar {
+      ToolbarItemGroup(placement: .keyboard) {
+        Spacer()
+        Button("Done") {
+          isFocused = false
+        }
+      }
     }
   }
 
