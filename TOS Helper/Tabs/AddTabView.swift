@@ -11,7 +11,7 @@ struct AddTabView: View {
   var onSave: (GameData) -> Void
   var onCancel: () -> Void
 
-  @State private var gameData: GameData = .init(name: "", recoveryInterval: 8)
+  @State private var gameData: GameData = .init("", recoveryInterval: 8)
 
   var body: some View {
     NavigationStack {
@@ -33,6 +33,7 @@ struct AddTabView: View {
           Button("save") {
             onSave(gameData)
           }
+          .disabled(!isNameValid() || !isRecoveryIntervalValid())
         }
         ToolbarItem(placement: .cancellationAction) {
           Button("cancel") {
@@ -44,6 +45,19 @@ struct AddTabView: View {
   }
 }
 
+// MARK: - Check Logic
+private extension AddTabView {
+  func isNameValid() -> Bool {
+    !gameData.name.isEmpty
+  }
+
+  func isRecoveryIntervalValid() -> Bool {
+    let recoveryInterval = gameData.recoveryInterval
+    return recoveryInterval > 0 && recoveryInterval.isMultiple(of: 1)
+  }
+}
+
+// MARK: - Preview
 #Preview {
   AddTabView(onSave: { _ in }, onCancel: {})
 }

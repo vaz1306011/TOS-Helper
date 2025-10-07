@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
   // MARK: - Properties
-  @State private var tabs: [GameData] = [.init(name: "New Game", recoveryInterval: 8)]
+  @State private var tabs: [GameData] = [.init("NewGame", recoveryInterval: 8)]
 
   @State private var showAddTab: Bool = false
   @State private var showEditTab: Bool = false
@@ -27,34 +27,40 @@ struct ContentView: View {
     return nil
   }
 
-  private let DEFAULT_TAB: GameData = .init(name: "New Game", recoveryInterval: 8)
-
   // MARK: - Body
   var body: some View {
     NavigationStack {
-      TabView(selection: $selection) {
-        ForEach($tabs) { tab in
-          TimerTabView(gameData: tab)
-            .tabItem {
-              Image(systemName: "square.fill")
-              Text(tab.name.wrappedValue)
-            }
-            .id(tab.id)
-            .tag(tab.id)
+      if tabs.isEmpty {
+        EmptyTabView { addTab() }
+      } else {
+        TabView(selection: $selection) {
+          ForEach($tabs) { tabData in timerTabView(tabData) }
         }
-      }
-      .id(tabs.count)
-      .onAppear {
-        if selection == nil {
-          selection = tabs.first?.id
+        .onAppear {
+          if selection == nil {
+            selection = tabs.first?.id
+          }
         }
+        .navigationTitle(currentTab?.name ?? "nil title")
+        .toolbar { toolBarButtons }
       }
-      .navigationTitle(currentTab?.name ?? "nil title")
-      .toolbar { toolBarButtons }
-      .sheet(isPresented: $showAddTab) { addTabSheet }
-      .sheet(isPresented: $showEditTab) { editTabSheet }
-      .overlay { deleteAlert }
     }
+    .sheet(isPresented: $showAddTab) { addTabSheet }
+    .sheet(isPresented: $showEditTab) { editTabSheet }
+    .overlay { deleteAlert }
+  }
+}
+
+// MARK: - TimerTabView
+private extension ContentView {
+  @ViewBuilder
+  func timerTabView(_ tabData: Binding<GameData>) -> some View {
+    TimerTabView(tabData)
+      .tabItem {
+        Image(systemName: "square.fill")
+        Text(tabData.name.wrappedValue)
+      }
+      .tag(tabData.id)
   }
 }
 
@@ -111,11 +117,7 @@ private extension ContentView {
         Button("delete", role: .destructive) {
           if let index = tabs.firstIndex(where: { $0.id == currentTab?.id }) {
             tabs.remove(at: index)
-            if tabs.isEmpty {
-              var newTab = DEFAULT_TAB
-              newTab.id = UUID()
-              tabs.append(newTab)
-            }
+            guard !tabs.isEmpty else { return }
             let safeIndex = min(index + 1, tabs.count - 1)
             selection = tabs[safeIndex].id
           }

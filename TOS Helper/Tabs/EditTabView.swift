@@ -63,7 +63,7 @@ struct EditTabView: View {
 // MARK: - Preview
 #Preview {
   EditTabView(
-    gameData: .constant(GameData(name: "", recoveryInterval: 8)),
+    gameData: .constant(GameData("", recoveryInterval: 8)),
     onSave: {},
     onCancel: {}
   )

@@ -20,6 +20,11 @@ struct TimerTabView: View {
   private let timer = Timer.publish(every: 1, on: .main, in: .common)
     .autoconnect()
 
+  // MARK: - Init
+  init(_ gameData: Binding<GameData>) {
+    self._gameData = gameData
+  }
+
   // MARK: - Body
   var body: some View {
     GeometryReader { geometry in
@@ -111,7 +116,5 @@ struct StatefulPreviewWrapper<Value, Content: View>: View {
 
 // MARK: - Preview
 #Preview {
-  TimerTabView(
-    gameData: .constant(GameData(name: "Game name", recoveryInterval: 8))
-  )
+  TimerTabView(.constant(GameData("Game name", recoveryInterval: 8)))
 }

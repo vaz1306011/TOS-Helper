@@ -14,4 +14,9 @@ struct GameData: Identifiable {
   var currentStamina: Int = 0
   var maxStamina: Int = 0
   var targetStamina: Int = 0
+
+  init(_ name: String, recoveryInterval: Int) {
+    self.name = name
+    self.recoveryInterval = recoveryInterval
+  }
 }
