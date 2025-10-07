@@ -16,7 +16,7 @@
 "enter_game_name" = "ゲーム名を入力";
 "recovery_interval" = "回復時間(分)";
 "enter_recovery_interval" = "回復時間を入力";
-"confirm_delete_message" = "「%@」を削除してもよろしいですか？";
+"confirm_delete_message %@" = "「%@」を削除してもよろしいですか？";
 
 // Stamina
 "current_stamina" = "現在のスタミナ";

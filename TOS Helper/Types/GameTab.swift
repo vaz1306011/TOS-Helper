@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GameData: Identifiable {
-  let id = UUID()
+  var id = UUID()
   var name: String
   var recoveryInterval: Int
   var currentStamina: Int = 0

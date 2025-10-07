@@ -16,7 +16,7 @@
 "enter_game_name" = "輸入遊戲名稱";
 "recovery_interval" = "回復時間(分)";
 "enter_recovery_interval" = "輸入回復時間";
-"confirm_delete_message" = "確定要刪除「%@」嗎？";
+"confirm_delete_message %@" = "確定要刪除「%@」嗎？";
 
 // Stamina
 "current_stamina" = "當前體力";

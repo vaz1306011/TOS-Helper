@@ -27,6 +27,8 @@ struct ContentView: View {
     return nil
   }
 
+  private let DEFAULT_TAB: GameData = .init(name: "New Game", recoveryInterval: 8)
+
   // MARK: - Body
   var body: some View {
     NavigationStack {
@@ -41,6 +43,7 @@ struct ContentView: View {
             .tag(tab.id)
         }
       }
+      .id(tabs.count)
       .onAppear {
         if selection == nil {
           selection = tabs.first?.id
@@ -72,7 +75,7 @@ private extension ContentView {
   }
 }
 
-// MARK: - Sheet and Alert
+// MARK: - Sheet and Alert Logic
 private extension ContentView {
   @ViewBuilder
   var addTabSheet: some View {
@@ -107,17 +110,19 @@ private extension ContentView {
       ) {
         Button("delete", role: .destructive) {
           if let index = tabs.firstIndex(where: { $0.id == currentTab?.id }) {
+            tabs.remove(at: index)
+            if tabs.isEmpty {
+              var newTab = DEFAULT_TAB
+              newTab.id = UUID()
+              tabs.append(newTab)
+            }
             let safeIndex = min(index + 1, tabs.count - 1)
             selection = tabs[safeIndex].id
-            tabs.remove(at: index)
           }
         }
         Button("cancel", role: .cancel) {}
       } message: {
-        Text(String(
-          format: NSLocalizedString("confirm_delete_message", comment: ""),
-          currentTab?.name ?? ""
-        ))
+        Text("confirm_delete_message \(currentTab?.name ?? "nil")")
       }
   }
 }
