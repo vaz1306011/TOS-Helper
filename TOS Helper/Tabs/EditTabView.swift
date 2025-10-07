@@ -47,6 +47,11 @@ struct EditTabView: View {
         ToolbarItem(placement: .confirmationAction) {
           Button("save") {
             gameData = tempGameData
+            gameData.nextRecovery.minute = min(
+              gameData.nextRecovery.minute,
+              gameData.recoveryInterval - 1
+            )
+
             onSave()
           }
         }

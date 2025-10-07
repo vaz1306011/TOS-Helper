@@ -12,9 +12,6 @@ struct TimerTabView: View {
   // MARK: - Properties
   @Binding var gameData: GameData
 
-  @State private var nextRecoveryMinute: Int = 0
-  @State private var nextStaminaSecond: Int = 0
-
   @State private var isCounting: Bool = false
   @State private var timerCancellable: AnyCancellable?
   private let timer = Timer.publish(every: 1, on: .main, in: .common)
@@ -34,8 +31,8 @@ struct TimerTabView: View {
 
         TimePickerView(
           maxMinute: $gameData.recoveryInterval,
-          minute: $nextRecoveryMinute,
-          second: $nextStaminaSecond,
+          minute: $gameData.nextRecovery.minute,
+          second: $gameData.nextRecovery.second,
           isLocked: $isCounting
         )
         .frame(width: geometry.size.width * 0.5)
@@ -90,12 +87,15 @@ private extension TimerTabView {
   }
 
   func tick() {
-    nextStaminaSecond -= 1
-    guard nextStaminaSecond < 0 else { return }
-    nextRecoveryMinute -= 1
-    nextStaminaSecond = 59
-    guard nextRecoveryMinute < 0 else { return }
-    nextRecoveryMinute = gameData.recoveryInterval - 1
+    gameData.nextRecovery.second -= 1
+    guard gameData.nextRecovery.second < 0 else { return }
+    gameData.nextRecovery.minute = min(
+      gameData.nextRecovery.minute - 1,
+      gameData.recoveryInterval - 1
+    )
+    gameData.nextRecovery.second = 59
+    guard gameData.nextRecovery.minute < 0 else { return }
+    gameData.nextRecovery.minute = gameData.recoveryInterval - 1
     gameData.currentStamina += 1
   }
 }
