@@ -7,25 +7,42 @@
 
 import SwiftUI
 
-struct GameData: Identifiable {
+struct GameData: Identifiable, Codable {
   var id = UUID()
   var name: String
-  var recoveryInterval: Int
+  var recoveryInterval: Int { didSet { nextRecovery.MAX_MINUTE = recoveryInterval - 1 }}
+  var nextRecovery: NextRecovery = .init()
   var currentStamina: Int = 0
   var maxStamina: Int = 0
   var targetStamina: Int = 0
-  struct NextRecovery {
-    var minute: Int = 0
-    var second: Int = 0
-  }
-
-  var nextRecovery: NextRecovery = .init()
+  var fullStaminaTime: Date? = nil
+  var targetStaminaTime: Date? = nil
 
   // MARK: - Init
   init(_ name: String, recoveryInterval: Int) {
     self.name = name
     self.recoveryInterval = recoveryInterval
-    self.nextRecovery.minute = recoveryInterval - 1
-    self.nextRecovery.second = 59
+
+    nextRecovery.MAX_MINUTE = recoveryInterval - 1
+    nextRecovery.minute = nextRecovery.MAX_MINUTE
+    nextRecovery.second = 59
+  }
+}
+
+extension GameData {
+  struct NextRecovery: Codable {
+    private var _second: Int = -1
+    var minute: Int = -1
+    var second: Int {
+      get { _second }
+      set {
+        if newValue < 0 {
+          minute -= 1
+          _second = 59
+        } else { _second = newValue }
+      }
+    }
+
+    var MAX_MINUTE: Int = -1
   }
 }

@@ -101,14 +101,9 @@ private extension TimerTabView {
 
   func tick() {
     gameData.nextRecovery.second -= 1
-    guard gameData.nextRecovery.second < 0 else { return }
-    gameData.nextRecovery.minute = min(
-      gameData.nextRecovery.minute - 1,
-      gameData.recoveryInterval - 1
-    )
-    gameData.nextRecovery.second = 59
+    
     guard gameData.nextRecovery.minute < 0 else { return }
-    gameData.nextRecovery.minute = gameData.recoveryInterval - 1
+    gameData.nextRecovery.minute = gameData.nextRecovery.MAX_MINUTE
     gameData.currentStamina += 1
   }
 }

@@ -49,7 +49,7 @@ struct EditTabView: View {
             gameData = tempGameData
             gameData.nextRecovery.minute = min(
               gameData.nextRecovery.minute,
-              gameData.recoveryInterval - 1
+              gameData.nextRecovery.MAX_MINUTE
             )
 
             onSave()
