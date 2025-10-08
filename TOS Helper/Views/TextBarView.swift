@@ -22,6 +22,7 @@ struct TextBarView: View {
     VStack(alignment: .center, spacing: 5) {
       Text(text)
         .font(.title3)
+        .multilineTextAlignment(.center)
       textField
     }
     .padding()
