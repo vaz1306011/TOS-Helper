@@ -1,5 +1,5 @@
 //
-//  TimerTab.swift
+//  TimerTabView.swift
 //  TOS Timer
 //
 //  Created by sora on 2025/9/17.
@@ -61,9 +61,8 @@ private extension TimerTabView {
     .toolbar {
       ToolbarItemGroup(placement: .keyboard) {
         Spacer()
-        Button("Done") {
-          isFocused = false
-        }
+        Button(action: { isFocused = false },
+               label: { Image(systemName: "xmark") })
       }
     }
   }
@@ -101,7 +100,7 @@ private extension TimerTabView {
 
   func tick() {
     gameData.nextRecovery.second -= 1
-    
+
     guard gameData.nextRecovery.minute < 0 else { return }
     gameData.nextRecovery.minute = gameData.nextRecovery.MAX_MINUTE
     gameData.currentStamina += 1

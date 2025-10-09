@@ -1,5 +1,5 @@
 //
-//  GameType.swift
+//  GameData.swift
 //  TOS Helper
 //
 //  Created by sora on 2025/10/5.

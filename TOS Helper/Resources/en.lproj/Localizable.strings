@@ -35,3 +35,7 @@
 // Toolbar Actions
 "save" = "Save";
 "cancel" = "Cancel";
+
+// Alert message
+"confirm_remove_changes" = "Are you sure you want to discard this change?";
+"discard_all_changes" = "Discard all changes";

@@ -11,19 +11,15 @@ struct ContentView: View {
   // MARK: - Properties
   @State private var tabs: [GameData] = [.init("NewGame", recoveryInterval: 8)]
 
-  @State private var showAddTab: Bool = false
-  @State private var showEditTab: Bool = false
-  @State private var showDeleteAlert: Bool = false
-
-  @State private var selection: UUID? = nil
+  @State private var showAddSheet: Bool = false
   @State private var editingTab: GameData?
   @State private var deletingTab: GameData?
+
+  @State private var selection: UUID? = nil
   private var currentTab: GameData? {
     if let selection,
        let tab = tabs.first(where: { $0.id == selection })
-    {
-      return tab
-    }
+    { return tab }
     return nil
   }
 
@@ -45,8 +41,8 @@ struct ContentView: View {
         .toolbar { toolBarButtons }
       }
     }
-    .sheet(isPresented: $showAddTab) { addTabSheet }
-    .sheet(isPresented: $showEditTab) { editTabSheet }
+    .sheet(isPresented: .constant(showAddSheet)) { addTabSheet }
+    .sheet(isPresented: .constant(editingTab != nil)) { editTabSheet }
     .overlay { deleteAlert }
   }
 }
@@ -88,11 +84,10 @@ private extension ContentView {
     AddTabView(
       onSave: { tab in
         tabs.append(tab)
-        showAddTab = false
         selection = tab.id
-      }, onCancel: {
-        showAddTab = false
-      }
+      },
+      onCancel: {},
+      onComplete: { showAddSheet = false }
     )
   }
 
@@ -101,8 +96,9 @@ private extension ContentView {
     if let index = tabs.firstIndex(where: { $0.id == currentTab?.id }) {
       EditTabView(
         gameData: $tabs[index],
-        onSave: { showEditTab = false },
-        onCancel: { showEditTab = false }
+        onSave: {},
+        onCancel: {},
+        onComplete: { editingTab = nil }
       )
     }
   }
@@ -112,17 +108,20 @@ private extension ContentView {
     EmptyView()
       .alert(
         "confirm_delete",
-        isPresented: $showDeleteAlert
+        isPresented: .constant(deletingTab != nil)
       ) {
         Button("delete", role: .destructive) {
           if let index = tabs.firstIndex(where: { $0.id == currentTab?.id }) {
             tabs.remove(at: index)
+            deletingTab = nil
             guard !tabs.isEmpty else { return }
             let safeIndex = min(index + 1, tabs.count - 1)
             selection = tabs[safeIndex].id
           }
         }
-        Button("cancel", role: .cancel) {}
+        Button("cancel", role: .cancel) {
+          deletingTab = nil
+        }
       } message: {
         Text("confirm_delete_message \(currentTab?.name ?? "nil")")
       }
@@ -131,18 +130,16 @@ private extension ContentView {
 
 // MARK: - Menu Logic
 private extension ContentView {
-  func addTab() {
-    showAddTab = true
+  private func addTab() {
+    showAddSheet = true
   }
 
   private func editCurrentTab() {
     editingTab = currentTab
-    showEditTab = true
   }
 
   private func deleteCurrentTab() {
     deletingTab = currentTab
-    showDeleteAlert = true
   }
 }
 

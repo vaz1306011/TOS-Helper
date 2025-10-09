@@ -12,6 +12,7 @@ struct TextBarView: View {
   @Binding var num: Int
   private let text: LocalizedStringKey
 
+  // MARK: - Init
   init(_ text: LocalizedStringKey, _ num: Binding<Int>) {
     self.text = text
     self._num = num
@@ -45,10 +46,7 @@ private extension TextBarView {
         )
       ) { obj in
         if let textField = obj.object as? UITextField {
-          textField.selectedTextRange = textField.textRange(
-            from: textField.beginningOfDocument,
-            to: textField.endOfDocument
-          )
+          textField.selectAll(nil)
         }
       }
   }

@@ -10,6 +10,7 @@ import SwiftUI
 struct AddTabView: View {
   var onSave: (GameData) -> Void
   var onCancel: () -> Void
+  var onComplete: (() -> Void)?
 
   @State private var gameData: GameData = .init("", recoveryInterval: 8)
 
@@ -30,15 +31,19 @@ struct AddTabView: View {
       .navigationTitle("add_timer")
       .toolbar {
         ToolbarItem(placement: .confirmationAction) {
-          Button("save") {
+          Button {
             onSave(gameData)
+            onComplete?()
+          } label: {
+            Image(systemName: "checkmark")
           }
           .disabled(!isNameValid() || !isRecoveryIntervalValid())
         }
         ToolbarItem(placement: .cancellationAction) {
-          Button("cancel") {
+          Button {
             onCancel()
-          }
+            onComplete?()
+          } label: { Image(systemName: "xmark") }
         }
       }
     }
