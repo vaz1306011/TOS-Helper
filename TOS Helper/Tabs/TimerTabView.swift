@@ -43,10 +43,7 @@ struct TimerTabView: View {
       }
       .frame(maxWidth: .infinity, alignment: .center)
     }
-    .onAppear {
-      handleTimer()
-      gameData.staminaManager.updateCurrentStaminaAndTimer()
-    }
+    .onAppear { handleTimer() }
     .onChange(of: gameData.isCounting) { _, _ in
       gameData.staminaManager.setFullStaminaTime()
       gameData.staminaManager.setTargetStaminaTime()
@@ -109,8 +106,7 @@ private extension TimerTabView {
 private extension TimerTabView {
   func handleTimer() {
     if gameData.isCounting {
-      timerCancellable =
-        timer.sink { _ in gameData.staminaManager.tick() }
+      timerCancellable = timer.sink { _ in gameData.staminaManager.tick() }
     } else {
       timerCancellable?.cancel()
       timerCancellable = nil

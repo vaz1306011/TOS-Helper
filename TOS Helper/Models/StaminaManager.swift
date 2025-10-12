@@ -32,18 +32,8 @@ struct StaminaManager: Codable, Equatable {
 // MARK: - NextRecovery
 extension StaminaManager {
   struct NextRecovery: Codable, Equatable {
-    private var _second: Int = -1
     var minute: Int = -1
-    var second: Int {
-      get { _second }
-      set {
-        if newValue < 0 {
-          minute -= 1
-          _second = 59
-        } else { _second = newValue }
-      }
-    }
-
+    var second: Int = -1
     var MAX_MINUTE: Int = -1
   }
 }
@@ -51,11 +41,7 @@ extension StaminaManager {
 // MARK: - Timer Logic
 extension StaminaManager {
   mutating func tick() {
-    nextRecovery.second -= 1
-
-    guard nextRecovery.minute < 0 else { return }
-    nextRecovery.minute = nextRecovery.MAX_MINUTE
-    currentStamina += 1
+    updateCurrentStaminaAndTimer()
   }
 }
 
@@ -89,6 +75,12 @@ extension StaminaManager {
 extension StaminaManager {
   mutating func updateCurrentStaminaAndTimer() {
     let timeDiff = Int(fullStaminaTime?.timeIntervalSinceNow ?? 0)
+    guard timeDiff > 0 else {
+      currentStamina = maxStamina
+      nextRecovery.minute = 0
+      nextRecovery.second = 0
+      return
+    }
     let result = timeDiff.quotientAndRemainder(dividingBy: recoveryInterval * 60)
     let diffStamina = result.quotient + 1
     let remainingTime = result.remainder
