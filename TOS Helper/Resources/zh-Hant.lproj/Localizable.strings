@@ -35,3 +35,7 @@
 // Toolbar Actions
 "save" = "儲存";
 "cancel" = "取消";
+
+// Alert message
+"confirm_remove_changes" = "你確定要移除此更改嗎？";
+"discard_all_changes" = "捨棄所有更動";

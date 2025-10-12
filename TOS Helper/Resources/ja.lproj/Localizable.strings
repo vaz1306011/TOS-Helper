@@ -35,3 +35,7 @@
 // Toolbar Actions
 "save" = "保存";
 "cancel" = "キャンセル";
+
+// Alert message
+"confirm_remove_changes" = "この変更を削除してもよろしいですか？";
+"discard_all_changes" = "すべての変更を破棄";

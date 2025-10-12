@@ -10,6 +10,7 @@ import SwiftUI
 struct AddTabView: View {
   var onSave: (GameData) -> Void
   var onCancel: () -> Void
+  var onComplete: (() -> Void)?
 
   @State private var gameData: GameData = .init("", recoveryInterval: 8)
 
@@ -22,7 +23,7 @@ struct AddTabView: View {
         Section(header: Text("recovery_interval")) {
           TextField(
             "game_name",
-            value: $gameData.recoveryInterval,
+            value: $gameData.staminaManager.recoveryInterval,
             format: .number
           )
         }
@@ -30,15 +31,19 @@ struct AddTabView: View {
       .navigationTitle("add_timer")
       .toolbar {
         ToolbarItem(placement: .confirmationAction) {
-          Button("save") {
+          Button {
             onSave(gameData)
+            onComplete?()
+          } label: {
+            Image(systemName: "checkmark")
           }
           .disabled(!isNameValid() || !isRecoveryIntervalValid())
         }
         ToolbarItem(placement: .cancellationAction) {
-          Button("cancel") {
+          Button {
             onCancel()
-          }
+            onComplete?()
+          } label: { Image(systemName: "xmark") }
         }
       }
     }
@@ -52,7 +57,7 @@ private extension AddTabView {
   }
 
   func isRecoveryIntervalValid() -> Bool {
-    let recoveryInterval = gameData.recoveryInterval
+    let recoveryInterval = gameData.staminaManager.recoveryInterval
     return recoveryInterval > 0 && recoveryInterval.isMultiple(of: 1)
   }
 }

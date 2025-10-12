@@ -10,20 +10,29 @@ import SwiftUI
 struct TextBarView: View {
   // MARK: - Properties
   @Binding var num: Int
-  private let text: LocalizedStringKey
+  @Binding var subTitle: Date?
 
-  init(_ text: LocalizedStringKey, _ num: Binding<Int>) {
-    self.text = text
+  private let title: LocalizedStringKey
+
+  // MARK: - Init
+  init(
+    _ text: LocalizedStringKey,
+    _ num: Binding<Int>,
+    subText: Binding<Date?> = .constant(nil)
+  ) {
+    self.title = text
     self._num = num
+    self._subTitle = subText
   }
 
   // MARK: - Body
   var body: some View {
     VStack(alignment: .center, spacing: 5) {
-      Text(text)
+      Text(title)
         .font(.title3)
         .multilineTextAlignment(.center)
       textField
+      Text(formattedDate($subTitle))
     }
     .padding()
   }
@@ -45,16 +54,31 @@ private extension TextBarView {
         )
       ) { obj in
         if let textField = obj.object as? UITextField {
-          textField.selectedTextRange = textField.textRange(
-            from: textField.beginningOfDocument,
-            to: textField.endOfDocument
-          )
+          textField.selectAll(nil)
         }
       }
+  }
+
+  func formattedDate(_ date: Binding<Date?>) -> String {
+    guard let value = date.wrappedValue else { return "" }
+
+    let relTimeFormatter = RelativeDateTimeFormatter()
+    relTimeFormatter.dateTimeStyle = .named
+    let now = Date()
+    let reltfStr = relTimeFormatter.localizedString(
+      for: value,
+      relativeTo: now
+    )
+
+    return reltfStr
   }
 }
 
 // MARK: - Preview
 #Preview {
-  TextBarView("當前體力", .constant(100))
+  TextBarView(
+    "當前體力",
+    .constant(100),
+    subText: .constant(Date().addingTimeInterval(60*60*24))
+  )
 }

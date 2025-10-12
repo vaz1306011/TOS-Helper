@@ -1,5 +1,5 @@
 //
-//  TimerTab.swift
+//  TimerTabView.swift
 //  TOS Timer
 //
 //  Created by sora on 2025/9/17.
@@ -12,7 +12,7 @@ struct TimerTabView: View {
   // MARK: - Properties
   @Binding var gameData: GameData
 
-  @State private var isCounting: Bool = false
+//  @State private var isCounting: Bool = false
   @State private var timerCancellable: AnyCancellable?
   private let timer = Timer.publish(every: 1, on: .main, in: .common)
     .autoconnect()
@@ -32,16 +32,31 @@ struct TimerTabView: View {
           .frame(width: geometry.size.width * 0.8)
 
         TimePickerView(
-          maxMinute: $gameData.recoveryInterval,
-          minute: $gameData.nextRecovery.minute,
-          second: $gameData.nextRecovery.second,
-          isLocked: $isCounting
+          maxMinute: $gameData.staminaManager.recoveryInterval,
+          minute: $gameData.staminaManager.nextRecovery.minute,
+          second: $gameData.staminaManager.nextRecovery.second,
+          isLocked: $gameData.isCounting
         )
         .frame(width: geometry.size.width * 0.5)
 
         counterButton
       }
       .frame(maxWidth: .infinity, alignment: .center)
+    }
+    .onAppear { handleTimer() }
+    .onChange(of: gameData.isCounting) { _, _ in
+      gameData.staminaManager.setFullStaminaTime()
+      gameData.staminaManager.setTargetStaminaTime()
+    }
+    .onChange(of: gameData.staminaManager.currentStamina) { _, _ in
+      gameData.staminaManager.setFullStaminaTime()
+      gameData.staminaManager.setTargetStaminaTime()
+    }
+    .onChange(of: gameData.staminaManager.maxStamina) { _, _ in
+      gameData.staminaManager.setFullStaminaTime()
+    }
+    .onChange(of: gameData.staminaManager.targetStamina) { _, _ in
+      gameData.staminaManager.setTargetStaminaTime()
     }
   }
 }
@@ -51,19 +66,22 @@ private extension TimerTabView {
   @ViewBuilder
   var staminaInput: some View {
     HStack {
-      TextBarView("current_stamina", $gameData.currentStamina)
+      TextBarView("current_stamina", $gameData.staminaManager.currentStamina)
         .focused($isFocused)
-      TextBarView("max_stamina", $gameData.maxStamina)
-        .focused($isFocused)
-      TextBarView("target_stamina", $gameData.targetStamina)
+      TextBarView(
+        "max_stamina",
+        $gameData.staminaManager.maxStamina,
+        subText: $gameData.staminaManager.fullStaminaTime
+      )
+      .focused($isFocused)
+      TextBarView("target_stamina", $gameData.staminaManager.targetStamina, subText: $gameData.staminaManager.targetStaminaTime)
         .focused($isFocused)
     }
     .toolbar {
       ToolbarItemGroup(placement: .keyboard) {
         Spacer()
-        Button("Done") {
-          isFocused = false
-        }
+        Button(action: { isFocused = false },
+               label: { Image(systemName: "xmark") })
       }
     }
   }
@@ -71,10 +89,10 @@ private extension TimerTabView {
   @ViewBuilder
   var counterButton: some View {
     Button(action: {
-      isCounting.toggle()
+      gameData.isCounting.toggle()
       handleTimer()
     }) {
-      Text(isCounting ? "stop" : "start")
+      Text(gameData.isCounting ? "stop" : "start")
         .padding(.horizontal, 30)
         .padding(.vertical)
         .background(Color.gray.opacity(0.2))
@@ -87,38 +105,12 @@ private extension TimerTabView {
 // MARK: - Timer logic
 private extension TimerTabView {
   func handleTimer() {
-    if isCounting {
-      timerCancellable =
-        timer
-          .sink { _ in
-            tick()
-          }
+    if gameData.isCounting {
+      timerCancellable = timer.sink { _ in gameData.staminaManager.tick() }
     } else {
       timerCancellable?.cancel()
       timerCancellable = nil
     }
-  }
-
-  func tick() {
-    gameData.nextRecovery.second -= 1
-    
-    guard gameData.nextRecovery.minute < 0 else { return }
-    gameData.nextRecovery.minute = gameData.nextRecovery.MAX_MINUTE
-    gameData.currentStamina += 1
-  }
-}
-
-struct StatefulPreviewWrapper<Value, Content: View>: View {
-  @State var value: Value
-  var content: (Binding<Value>) -> Content
-
-  init(_ value: Value, content: @escaping (Binding<Value>) -> Content) {
-    _value = State(initialValue: value)
-    self.content = content
-  }
-
-  var body: some View {
-    content($value)
   }
 }
 
