@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
   // MARK: - Properties
-  @State private var tabs: [GameData] = [.init("NewGame", recoveryInterval: 8)]
+  @State private var tabs: [GameData] = []
 
   @State private var showAddSheet: Bool = false
   @State private var editingTab: GameData?
@@ -44,6 +44,8 @@ struct ContentView: View {
     .sheet(isPresented: .constant(showAddSheet)) { addTabSheet }
     .sheet(isPresented: .constant(editingTab != nil)) { editTabSheet }
     .overlay { deleteAlert }
+    .onAppear { tabs = DataStore.share.load() }
+    .onChange(of: tabs) { _, newValue in DataStore.share.save(newValue) }
   }
 }
 

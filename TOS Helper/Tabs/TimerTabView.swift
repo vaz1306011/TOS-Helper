@@ -12,7 +12,7 @@ struct TimerTabView: View {
   // MARK: - Properties
   @Binding var gameData: GameData
 
-  @State private var isCounting: Bool = false
+//  @State private var isCounting: Bool = false
   @State private var timerCancellable: AnyCancellable?
   private let timer = Timer.publish(every: 1, on: .main, in: .common)
     .autoconnect()
@@ -35,7 +35,7 @@ struct TimerTabView: View {
           maxMinute: $gameData.recoveryInterval,
           minute: $gameData.nextRecovery.minute,
           second: $gameData.nextRecovery.second,
-          isLocked: $isCounting
+          isLocked: $gameData.isCounting
         )
         .frame(width: geometry.size.width * 0.5)
 
@@ -43,6 +43,16 @@ struct TimerTabView: View {
       }
       .frame(maxWidth: .infinity, alignment: .center)
     }
+    .onChange(of: gameData.isCounting) { _, _ in
+      setFullStaminaTime()
+      setTargetStaminaTime()
+    }
+    .onChange(of: gameData.currentStamina) { _, _ in
+      setFullStaminaTime()
+      setTargetStaminaTime()
+    }
+    .onChange(of: gameData.maxStamina) { _, _ in setFullStaminaTime() }
+    .onChange(of: gameData.targetStamina) { _, _ in setTargetStaminaTime() }
   }
 }
 
@@ -53,9 +63,13 @@ private extension TimerTabView {
     HStack {
       TextBarView("current_stamina", $gameData.currentStamina)
         .focused($isFocused)
-      TextBarView("max_stamina", $gameData.maxStamina)
-        .focused($isFocused)
-      TextBarView("target_stamina", $gameData.targetStamina)
+      TextBarView(
+        "max_stamina",
+        $gameData.maxStamina,
+        subText: $gameData.fullStaminaTime
+      )
+      .focused($isFocused)
+      TextBarView("target_stamina", $gameData.targetStamina, subText: $gameData.targetStaminaTime)
         .focused($isFocused)
     }
     .toolbar {
@@ -70,10 +84,10 @@ private extension TimerTabView {
   @ViewBuilder
   var counterButton: some View {
     Button(action: {
-      isCounting.toggle()
+      gameData.isCounting.toggle()
       handleTimer()
     }) {
-      Text(isCounting ? "stop" : "start")
+      Text(gameData.isCounting ? "stop" : "start")
         .padding(.horizontal, 30)
         .padding(.vertical)
         .background(Color.gray.opacity(0.2))
@@ -86,12 +100,9 @@ private extension TimerTabView {
 // MARK: - Timer logic
 private extension TimerTabView {
   func handleTimer() {
-    if isCounting {
+    if gameData.isCounting {
       timerCancellable =
-        timer
-          .sink { _ in
-            tick()
-          }
+        timer.sink { _ in tick() }
     } else {
       timerCancellable?.cancel()
       timerCancellable = nil
@@ -105,19 +116,37 @@ private extension TimerTabView {
     gameData.nextRecovery.minute = gameData.nextRecovery.MAX_MINUTE
     gameData.currentStamina += 1
   }
+
+  func getEstimatedRecoveryDate(toStamina targetStamina: Int) -> Date? {
+    let now = Date()
+    let diff = targetStamina - gameData.currentStamina - 1
+    let nextRecoveryIneverval = 60 * gameData.nextRecovery.minute + gameData.nextRecovery.second
+    let totalRecoveryIneverval = 60 * diff * gameData.recoveryInterval + nextRecoveryIneverval
+    if let targetTime = Calendar.current.date(
+      byAdding: .second,
+      value: Int(totalRecoveryIneverval),
+      to: now
+    ) {
+      return targetTime
+    }
+    return nil
+  }
 }
 
-struct StatefulPreviewWrapper<Value, Content: View>: View {
-  @State var value: Value
-  var content: (Binding<Value>) -> Content
-
-  init(_ value: Value, content: @escaping (Binding<Value>) -> Content) {
-    _value = State(initialValue: value)
-    self.content = content
+// MARK: - DataStore
+private extension TimerTabView {
+  func setFullStaminaTime() {
+    let time = getEstimatedRecoveryDate(toStamina: gameData.maxStamina)
+    gameData.fullStaminaTime = time
   }
 
-  var body: some View {
-    content($value)
+  func setTargetStaminaTime() {
+    let time = getEstimatedRecoveryDate(toStamina: gameData.targetStamina)
+    gameData.targetStaminaTime = time
+  }
+  
+  func setCurrentStaminaTime() {
+    
   }
 }
 
