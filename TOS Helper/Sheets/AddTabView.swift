@@ -23,7 +23,7 @@ struct AddTabView: View {
         Section(header: Text("recovery_interval")) {
           TextField(
             "game_name",
-            value: $gameData.recoveryInterval,
+            value: $gameData.staminaManager.recoveryInterval,
             format: .number
           )
         }
@@ -57,7 +57,7 @@ private extension AddTabView {
   }
 
   func isRecoveryIntervalValid() -> Bool {
-    let recoveryInterval = gameData.recoveryInterval
+    let recoveryInterval = gameData.staminaManager.recoveryInterval
     return recoveryInterval > 0 && recoveryInterval.isMultiple(of: 1)
   }
 }

@@ -30,7 +30,8 @@ struct EditTabView: View {
     self.onSave = onSave
     self.onCancel = onCancel
     self.onComplete = onComplete
-    self.tempGameData = gameData.wrappedValue
+    // Proper @State initialization inside init
+    self._tempGameData = State(initialValue: gameData.wrappedValue)
   }
 
   // MARK: - Body
@@ -43,7 +44,7 @@ struct EditTabView: View {
         Section(header: Text("recovery_interval")) {
           TextField(
             "recovery_interval",
-            value: $tempGameData.recoveryInterval,
+            value: $tempGameData.staminaManager.recoveryInterval,
             format: .number
           )
         }
@@ -53,10 +54,10 @@ struct EditTabView: View {
         ToolbarItem(placement: .confirmationAction) {
           Button {
             gameData.name = tempGameData.name
-            gameData.recoveryInterval = tempGameData.recoveryInterval
-            gameData.nextRecovery.minute = min(
-              gameData.nextRecovery.minute,
-              tempGameData.nextRecovery.MAX_MINUTE
+            gameData.staminaManager.recoveryInterval = tempGameData.staminaManager.recoveryInterval
+            gameData.staminaManager.nextRecovery.minute = min(
+              gameData.staminaManager.nextRecovery.minute,
+              tempGameData.staminaManager.nextRecovery.MAX_MINUTE
             )
             onSave()
             onComplete?()
@@ -64,18 +65,19 @@ struct EditTabView: View {
             .disabled(!isNameValid() || !isRecoveryIntervalValid())
         }
         ToolbarItem(placement: .cancellationAction) {
-          Button { showCancelAlert = true }
-            label: { Image(systemName: "xmark") }
-            .confirmationDialog(
-              "confirm_remove_changes",
-              isPresented: $showCancelAlert,
-              titleVisibility: .visible
-            ) {
-              Button("discard_all_changes", role: .destructive) {
-                onCancel()
-                onComplete?()
-              }
+          Button(action: { showCancelAlert = true }) {
+            Image(systemName: "xmark")
+          }
+          .confirmationDialog(
+            "confirm_remove_changes",
+            isPresented: $showCancelAlert,
+            titleVisibility: .visible
+          ) {
+            Button("discard_all_changes", role: .destructive) {
+              onCancel()
+              onComplete?()
             }
+          }
         }
       }
     }
@@ -93,11 +95,11 @@ struct EditTabView: View {
 // MARK: - Check Logic
 private extension EditTabView {
   func isNameValid() -> Bool {
-    !gameData.name.isEmpty
+    !tempGameData.name.isEmpty
   }
 
   func isRecoveryIntervalValid() -> Bool {
-    let recoveryInterval = gameData.recoveryInterval
+    let recoveryInterval = tempGameData.staminaManager.recoveryInterval
     return recoveryInterval > 0 && recoveryInterval.isMultiple(of: 1)
   }
 }

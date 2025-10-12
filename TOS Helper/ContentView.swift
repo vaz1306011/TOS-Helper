@@ -33,9 +33,7 @@ struct ContentView: View {
           ForEach($tabs) { tabData in timerTabView(tabData) }
         }
         .onAppear {
-          if selection == nil {
-            selection = tabs.first?.id
-          }
+          if selection == nil { selection = tabs.first?.id }
         }
         .navigationTitle(currentTab?.name ?? "nil title")
         .toolbar { toolBarButtons }

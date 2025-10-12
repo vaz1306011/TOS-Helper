@@ -32,9 +32,9 @@ struct TimerTabView: View {
           .frame(width: geometry.size.width * 0.8)
 
         TimePickerView(
-          maxMinute: $gameData.recoveryInterval,
-          minute: $gameData.nextRecovery.minute,
-          second: $gameData.nextRecovery.second,
+          maxMinute: $gameData.staminaManager.recoveryInterval,
+          minute: $gameData.staminaManager.nextRecovery.minute,
+          second: $gameData.staminaManager.nextRecovery.second,
           isLocked: $gameData.isCounting
         )
         .frame(width: geometry.size.width * 0.5)
@@ -43,16 +43,24 @@ struct TimerTabView: View {
       }
       .frame(maxWidth: .infinity, alignment: .center)
     }
+    .onAppear {
+      handleTimer()
+      gameData.staminaManager.updateCurrentStaminaAndTimer()
+    }
     .onChange(of: gameData.isCounting) { _, _ in
-      setFullStaminaTime()
-      setTargetStaminaTime()
+      gameData.staminaManager.setFullStaminaTime()
+      gameData.staminaManager.setTargetStaminaTime()
     }
-    .onChange(of: gameData.currentStamina) { _, _ in
-      setFullStaminaTime()
-      setTargetStaminaTime()
+    .onChange(of: gameData.staminaManager.currentStamina) { _, _ in
+      gameData.staminaManager.setFullStaminaTime()
+      gameData.staminaManager.setTargetStaminaTime()
     }
-    .onChange(of: gameData.maxStamina) { _, _ in setFullStaminaTime() }
-    .onChange(of: gameData.targetStamina) { _, _ in setTargetStaminaTime() }
+    .onChange(of: gameData.staminaManager.maxStamina) { _, _ in
+      gameData.staminaManager.setFullStaminaTime()
+    }
+    .onChange(of: gameData.staminaManager.targetStamina) { _, _ in
+      gameData.staminaManager.setTargetStaminaTime()
+    }
   }
 }
 
@@ -61,15 +69,15 @@ private extension TimerTabView {
   @ViewBuilder
   var staminaInput: some View {
     HStack {
-      TextBarView("current_stamina", $gameData.currentStamina)
+      TextBarView("current_stamina", $gameData.staminaManager.currentStamina)
         .focused($isFocused)
       TextBarView(
         "max_stamina",
-        $gameData.maxStamina,
-        subText: $gameData.fullStaminaTime
+        $gameData.staminaManager.maxStamina,
+        subText: $gameData.staminaManager.fullStaminaTime
       )
       .focused($isFocused)
-      TextBarView("target_stamina", $gameData.targetStamina, subText: $gameData.targetStaminaTime)
+      TextBarView("target_stamina", $gameData.staminaManager.targetStamina, subText: $gameData.staminaManager.targetStaminaTime)
         .focused($isFocused)
     }
     .toolbar {
@@ -102,51 +110,11 @@ private extension TimerTabView {
   func handleTimer() {
     if gameData.isCounting {
       timerCancellable =
-        timer.sink { _ in tick() }
+        timer.sink { _ in gameData.staminaManager.tick() }
     } else {
       timerCancellable?.cancel()
       timerCancellable = nil
     }
-  }
-
-  func tick() {
-    gameData.nextRecovery.second -= 1
-
-    guard gameData.nextRecovery.minute < 0 else { return }
-    gameData.nextRecovery.minute = gameData.nextRecovery.MAX_MINUTE
-    gameData.currentStamina += 1
-  }
-
-  func getEstimatedRecoveryDate(toStamina targetStamina: Int) -> Date? {
-    let now = Date()
-    let diff = targetStamina - gameData.currentStamina - 1
-    let nextRecoveryIneverval = 60 * gameData.nextRecovery.minute + gameData.nextRecovery.second
-    let totalRecoveryIneverval = 60 * diff * gameData.recoveryInterval + nextRecoveryIneverval
-    if let targetTime = Calendar.current.date(
-      byAdding: .second,
-      value: Int(totalRecoveryIneverval),
-      to: now
-    ) {
-      return targetTime
-    }
-    return nil
-  }
-}
-
-// MARK: - DataStore
-private extension TimerTabView {
-  func setFullStaminaTime() {
-    let time = getEstimatedRecoveryDate(toStamina: gameData.maxStamina)
-    gameData.fullStaminaTime = time
-  }
-
-  func setTargetStaminaTime() {
-    let time = getEstimatedRecoveryDate(toStamina: gameData.targetStamina)
-    gameData.targetStaminaTime = time
-  }
-  
-  func setCurrentStaminaTime() {
-    
   }
 }
 

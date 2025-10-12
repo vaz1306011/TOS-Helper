@@ -10,43 +10,12 @@ import SwiftUI
 struct GameData: Identifiable, Codable, Equatable {
   var id = UUID()
   var name: String
-  
-  var currentStamina: Int = 0
-  var maxStamina: Int = 0
-  var targetStamina: Int = 0
-  
-  var recoveryInterval: Int { didSet { nextRecovery.MAX_MINUTE = recoveryInterval - 1 }}
-  var nextRecovery: NextRecovery = .init()
+  var staminaManager: StaminaManager
   var isCounting: Bool = false
-  
-  var fullStaminaTime: Date? = nil
-  var targetStaminaTime: Date? = nil
 
   // MARK: - Init
   init(_ name: String, recoveryInterval: Int) {
     self.name = name
-    self.recoveryInterval = recoveryInterval
-
-    nextRecovery.MAX_MINUTE = recoveryInterval - 1
-    nextRecovery.minute = nextRecovery.MAX_MINUTE
-    nextRecovery.second = 59
-  }
-}
-
-extension GameData {
-  struct NextRecovery: Codable, Equatable {
-    private var _second: Int = -1
-    var minute: Int = -1
-    var second: Int {
-      get { _second }
-      set {
-        if newValue < 0 {
-          minute -= 1
-          _second = 59
-        } else { _second = newValue }
-      }
-    }
-
-    var MAX_MINUTE: Int = -1
+    self.staminaManager = .init(recoveryInterval: recoveryInterval)
   }
 }
