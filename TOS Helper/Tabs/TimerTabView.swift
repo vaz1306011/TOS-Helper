@@ -6,6 +6,7 @@
 //
 
 import Combine
+import RswiftResources
 import SwiftUI
 
 struct TimerTabView: View {
@@ -66,16 +67,23 @@ private extension TimerTabView {
   @ViewBuilder
   var staminaInput: some View {
     HStack {
-      TextBarView("current_stamina", $gameData.staminaManager.currentStamina)
-        .focused($isFocused)
       TextBarView(
-        "max_stamina",
+        R.string.localizable.current_stamina(),
+        $gameData.staminaManager.currentStamina
+      )
+      .focused($isFocused)
+      TextBarView(
+        R.string.localizable.max_stamina(),
         $gameData.staminaManager.maxStamina,
         subText: $gameData.staminaManager.fullStaminaTime
       )
       .focused($isFocused)
-      TextBarView("target_stamina", $gameData.staminaManager.targetStamina, subText: $gameData.staminaManager.targetStaminaTime)
-        .focused($isFocused)
+      TextBarView(
+        R.string.localizable.target_stamina(),
+        $gameData.staminaManager.targetStamina,
+        subText: $gameData.staminaManager.targetStaminaTime
+      )
+      .focused($isFocused)
     }
     .toolbar {
       ToolbarItemGroup(placement: .keyboard) {
@@ -92,7 +100,9 @@ private extension TimerTabView {
       gameData.isCounting.toggle()
       handleTimer()
     }) {
-      Text(gameData.isCounting ? "stop" : "start")
+      Text(gameData.isCounting ?
+        R.string.localizable.stop() : R.string.localizable.start()
+      )
         .padding(.horizontal, 30)
         .padding(.vertical)
         .background(Color.gray.opacity(0.2))
@@ -116,5 +126,5 @@ private extension TimerTabView {
 
 // MARK: - Preview
 #Preview {
-  TimerTabView(.constant(GameData("Game name", recoveryInterval: 8)))
+  TimerTabView(.constant(GameData("", recoveryInterval: 8)))
 }

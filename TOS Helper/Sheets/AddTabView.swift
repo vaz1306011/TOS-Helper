@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RswiftResources
 
 struct AddTabView: View {
   var onSave: (GameData) -> Void
@@ -17,18 +18,18 @@ struct AddTabView: View {
   var body: some View {
     NavigationStack {
       Form {
-        Section(header: Text("game_name")) {
-          TextField("game_name", text: $gameData.name)
+        Section(header: Text(R.string.localizable.game_name())) {
+          TextField(R.string.localizable.game_name(), text: $gameData.name)
         }
-        Section(header: Text("recovery_interval")) {
+        Section(header: Text(R.string.localizable.recovery_interval())) {
           TextField(
-            "game_name",
+            R.string.localizable.recovery_interval(),
             value: $gameData.staminaManager.recoveryInterval,
             format: .number
           )
         }
       }
-      .navigationTitle("add_timer")
+      .navigationTitle(R.string.localizable.add_timer())
       .toolbar {
         ToolbarItem(placement: .confirmationAction) {
           Button {

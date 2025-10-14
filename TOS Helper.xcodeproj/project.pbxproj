@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		97EC2E442E9E06AA0040A894 /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 97EC2E432E9E06AA0040A894 /* RswiftLibrary */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		9721050A2E7A80510053D395 /* TOS Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TOS Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				97EC2E442E9E06AA0040A894 /* RswiftLibrary in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +38,7 @@
 			isa = PBXGroup;
 			children = (
 				9721050C2E7A80510053D395 /* TOS Helper */,
+				976F594E2E9E12E300284A74 /* Frameworks */,
 				9721050B2E7A80510053D395 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +49,13 @@
 				9721050A2E7A80510053D395 /* TOS Helper.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		976F594E2E9E12E300284A74 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -59,12 +72,14 @@
 			buildRules = (
 			);
 			dependencies = (
+				97EC2E462E9E06D50040A894 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				9721050C2E7A80510053D395 /* TOS Helper */,
 			);
 			name = "TOS Helper";
 			packageProductDependencies = (
+				97EC2E432E9E06AA0040A894 /* RswiftLibrary */,
 			);
 			productName = "TOS Helper";
 			productReference = 9721050A2E7A80510053D395 /* TOS Helper.app */;
@@ -98,6 +113,9 @@
 			);
 			mainGroup = 972105012E7A80510053D395;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				97EC2E422E9E06AA0040A894 /* XCRemoteSwiftPackageReference "R" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9721050B2E7A80510053D395 /* Products */;
 			projectDirPath = "";
@@ -127,6 +145,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		97EC2E462E9E06D50040A894 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 97EC2E452E9E06D50040A894 /* RswiftGenerateInternalResources */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		972105132E7A80520053D395 /* Debug */ = {
@@ -338,6 +363,29 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		97EC2E422E9E06AA0040A894 /* XCRemoteSwiftPackageReference "R" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mac-cain13/R.swift";
+			requirement = {
+				kind = exactVersion;
+				version = 7.8.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		97EC2E432E9E06AA0040A894 /* RswiftLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 97EC2E422E9E06AA0040A894 /* XCRemoteSwiftPackageReference "R" */;
+			productName = RswiftLibrary;
+		};
+		97EC2E452E9E06D50040A894 /* RswiftGenerateInternalResources */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = "plugin:RswiftGenerateInternalResources";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 972105022E7A80510053D395 /* Project object */;
 }

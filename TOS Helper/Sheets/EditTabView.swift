@@ -5,6 +5,7 @@
 //  Created by sora on 2025/10/6.
 //
 
+import RswiftResources
 import SwiftUI
 
 struct EditTabView: View {
@@ -38,18 +39,22 @@ struct EditTabView: View {
   var body: some View {
     NavigationStack {
       Form {
-        Section(header: Text("game_name")) {
-          TextField("game_name", text: $tempGameData.name)
+        Section(header: Text(R.string.localizable.game_name())) {
+          TextField(R.string.localizable.game_name(), text: $tempGameData.name)
         }
-        Section(header: Text("recovery_interval")) {
+        Section(
+          header: Text(
+            R.string.localizable.recovery_interval()
+          )
+        ) {
           TextField(
-            "recovery_interval",
+            R.string.localizable.recovery_interval(),
             value: $tempGameData.staminaManager.recoveryInterval,
             format: .number
           )
         }
       }
-      .navigationTitle("edit_timer")
+      .navigationTitle(R.string.localizable.edit_timer())
       .toolbar {
         ToolbarItem(placement: .confirmationAction) {
           Button {
@@ -69,11 +74,14 @@ struct EditTabView: View {
             Image(systemName: "xmark")
           }
           .confirmationDialog(
-            "confirm_remove_changes",
+            R.string.localizable.confirm_remove_changes(),
             isPresented: $showCancelAlert,
             titleVisibility: .visible
           ) {
-            Button("discard_all_changes", role: .destructive) {
+            Button(
+              R.string.localizable.discard_all_changes(),
+              role: .destructive
+            ) {
               onCancel()
               onComplete?()
             }

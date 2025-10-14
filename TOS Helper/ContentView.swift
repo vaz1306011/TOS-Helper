@@ -5,6 +5,7 @@
 //  Created by sora on 2025/9/17.
 //
 
+import RswiftResources
 import SwiftUI
 
 struct ContentView: View {
@@ -66,9 +67,9 @@ private extension ContentView {
   var toolBarButtons: some ToolbarContent {
     ToolbarItem(placement: .navigationBarTrailing) {
       Menu {
-        Button("add") { addTab() }
-        Button("edit") { editCurrentTab() }
-        Button("delete") { deleteCurrentTab() }
+        Button(R.string.localizable.add()) { addTab() }
+        Button(R.string.localizable.edit()) { editCurrentTab() }
+        Button(R.string.localizable.delete()) { deleteCurrentTab() }
       } label: {
         Image(systemName: "ellipsis.circle.fill")
           .font(.title)
@@ -107,10 +108,10 @@ private extension ContentView {
   var deleteAlert: some View {
     EmptyView()
       .alert(
-        "confirm_delete",
+        R.string.localizable.confirm_delete(),
         isPresented: .constant(deletingTab != nil)
       ) {
-        Button("delete", role: .destructive) {
+        Button(R.string.localizable.delete(), role: .destructive) {
           if let index = tabs.firstIndex(where: { $0.id == currentTab?.id }) {
             tabs.remove(at: index)
             deletingTab = nil
@@ -119,11 +120,11 @@ private extension ContentView {
             selection = tabs[safeIndex].id
           }
         }
-        Button("cancel", role: .cancel) {
+        Button(R.string.localizable.cancel(), role: .cancel) {
           deletingTab = nil
         }
       } message: {
-        Text("confirm_delete_message \(currentTab?.name ?? "nil")")
+        Text(R.string.localizable.confirm_delete_message(currentTab?.name ?? "nil"))
       }
   }
 }

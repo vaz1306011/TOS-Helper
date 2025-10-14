@@ -5,6 +5,7 @@
 //  Created by sora on 2025/9/8.
 //
 
+import RswiftResources
 import SwiftUI
 
 struct TextBarView: View {
@@ -12,11 +13,11 @@ struct TextBarView: View {
   @Binding var num: Int
   @Binding var subTitle: Date?
 
-  private let title: LocalizedStringKey
+  private let title: String
 
   // MARK: - Init
   init(
-    _ text: LocalizedStringKey,
+    _ text: String,
     _ num: Binding<Int>,
     subText: Binding<Date?> = .constant(nil)
   ) {
@@ -77,7 +78,7 @@ private extension TextBarView {
 // MARK: - Preview
 #Preview {
   TextBarView(
-    "當前體力",
+    R.string.localizable.current_stamina(),
     .constant(100),
     subText: .constant(Date().addingTimeInterval(60*60*24))
   )
